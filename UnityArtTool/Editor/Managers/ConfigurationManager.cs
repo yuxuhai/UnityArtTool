@@ -105,9 +105,6 @@ namespace ArtTools
             {
                 if (_selectedDataIndex != value)
                 {
-                    // 在更换配置文件时，先刷新配置列表以获取最新的配置文件
-                    RefreshAvailableConfigurations();
-                    
                     _selectedDataIndex = value;
                     LoadConfigurationByIndex(value);
                 }

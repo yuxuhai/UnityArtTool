@@ -75,6 +75,7 @@ namespace ArtTools
                 _uiManager.OnSaveRequested -= OnSaveRequested;
                 _uiManager.OnLocateConfigRequested -= OnLocateConfigRequested;
                 _uiManager.OnOnlineStartRequested -= OnOnlineStartRequested;
+                _uiManager.OnRefreshConfigRequested -= OnRefreshConfigRequested;
             }
 
             // 解除拖拽管理器事件订阅并重置状态
@@ -153,6 +154,7 @@ namespace ArtTools
                 _uiManager.OnSaveRequested += OnSaveRequested;
                 _uiManager.OnLocateConfigRequested += OnLocateConfigRequested;
                 _uiManager.OnOnlineStartRequested += OnOnlineStartRequested;
+                _uiManager.OnRefreshConfigRequested += OnRefreshConfigRequested;
 
                 // 订阅拖拽事件
                 _dragDropManager.OnTabReordered += OnTabReordered;
@@ -429,6 +431,15 @@ namespace ArtTools
         {
             // 配置管理器会自动处理加载，这里只需要刷新UI
             Repaint();
+        }
+        
+        /// <summary>
+        /// 处理刷新配置列表请求事件
+        /// </summary>
+        private void OnRefreshConfigRequested()
+        {
+            _configManager?.RefreshAvailableConfigurations();
+            Debug.Log("[测试工具] 已刷新配置文件列表");
         }
          
          #endregion

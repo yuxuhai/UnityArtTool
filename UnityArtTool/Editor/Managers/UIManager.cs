@@ -55,6 +55,11 @@ namespace ArtTools
         public event Action OnOnlineStartRequested;
         
         /// <summary>
+        /// 请求刷新配置列表时触发的事件
+        /// </summary>
+        public event Action OnRefreshConfigRequested;
+        
+        /// <summary>
         /// 标签页添加时触发的事件
         /// </summary>
         public event Action<string> OnTabAdded;
@@ -209,13 +214,26 @@ namespace ArtTools
         /// <returns>新选中的配置文件索引</returns>
         public int DrawConfigSelector(int selectedIndex, string[] configNames)
         {
+            EditorGUILayout.BeginHorizontal();
+            
             EditorGUI.BeginChangeCheck();
             int newIndex = EditorGUILayout.Popup(new GUIContent("配置文件"), selectedIndex, configNames);
             if (EditorGUI.EndChangeCheck())
             {
                 OnConfigurationSelectionChanged?.Invoke(newIndex);
+                EditorGUILayout.EndHorizontal();
                 return newIndex;
             }
+            
+            // 刷新按钮
+            var refreshIcon = EditorGUIUtility.IconContent("d_Refresh");
+            refreshIcon.tooltip = "刷新配置文件列表";
+            if (GUILayout.Button(refreshIcon, GUILayout.Width(30), GUILayout.Height(18)))
+            {
+                OnRefreshConfigRequested?.Invoke();
+            }
+            
+            EditorGUILayout.EndHorizontal();
             return selectedIndex;
         }
         
