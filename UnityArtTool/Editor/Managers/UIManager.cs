@@ -570,18 +570,30 @@ namespace ArtTools
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             EditorGUILayout.LabelField("添加新工具项", EditorStyles.boldLabel);
 
+            // 检查是否有标签页
+            bool hasValidTab = activeData.tabs.Count > 0 && _selectedTabID >= 0 && _selectedTabID < activeData.tabs.Count;
+            
             EditorGUILayout.BeginHorizontal();
             _toolTypeToAdd = (ToolType)EditorGUILayout.EnumPopup("工具类型", _toolTypeToAdd);
+            
+            EditorGUI.BeginDisabledGroup(!hasValidTab);
             if (GUILayout.Button("+", GUILayout.MaxWidth(20)))
             {
-                if (activeData.tabs.Count > _selectedTabID)
+                if (hasValidTab)
                 {
                     TestToolItem newItem = GetClonedNewItem();
                     OnToolItemAdded?.Invoke(_selectedTabID, newItem);
                     hasChanged = true;
                 }
             }
+            EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndHorizontal();
+            
+            // 显示提示信息
+            if (!hasValidTab)
+            {
+                EditorGUILayout.HelpBox("请先在左侧创建一个标签页，然后再添加工具项。", MessageType.Warning);
+            }
 
             // 根据工具类型绘制对应的配置UI
             switch (_toolTypeToAdd)

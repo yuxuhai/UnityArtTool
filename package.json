@@ -1,7 +1,7 @@
 {
   "name": "com.yuxuhai.arttools",
   "displayName": "UnityArtTools",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "unity": "2020.3",
   "description": "用于提升美术、关卡、运营等非程序同学工作效率的 Unity 编辑器工具面板，支持自定义标签页与多种常用工具项。",
   "keywords": [
