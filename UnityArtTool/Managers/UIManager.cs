@@ -153,11 +153,6 @@ namespace ArtTools
             "https://www.zhihu.com/search?type=content&q={0}"
         };
         
-        /// <summary>
-        /// 调试管理器实例
-        /// </summary>
-        private DebugManager _debugManager;
-        
         #endregion
         
         #region 公共属性
@@ -203,12 +198,7 @@ namespace ArtTools
         /// </summary>
         public void Initialize()
         {
-            _debugManager = DebugManager.Instance;
-            _debugManager?.LogInfo("UIManager", "UI管理器初始化开始");
-            
             CacheMenuItems();
-            
-            _debugManager?.LogInfo("UIManager", "UI管理器初始化完成");
         }
         
         /// <summary>
@@ -299,9 +289,6 @@ namespace ArtTools
         {
             if (activeData == null) return false;
             
-            // 开始性能监控
-            _debugManager?.StartPerformanceMonitoring("DrawLeftSidebar");
-            
             bool hasChanged = false;
             float width = _isEditMode ? 250f : 150f;
             _scrollPositionLeft = EditorGUILayout.BeginScrollView(_scrollPositionLeft, EditorStyles.helpBox, GUILayout.Width(width));
@@ -388,9 +375,6 @@ namespace ArtTools
 
             EditorGUILayout.EndScrollView();
             
-            // 结束性能监控
-            _debugManager?.EndPerformanceMonitoring("DrawLeftSidebar");
-            
             return hasChanged;
         }
         
@@ -403,9 +387,6 @@ namespace ArtTools
         public bool DrawRightPanel(TestToolsWindowData activeData, DragDropManager dragDropManager)
         {
             if (activeData == null) return false;
-            
-            // 开始性能监控
-            _debugManager?.StartPerformanceMonitoring("DrawRightPanel");
             
             bool hasChanged = false;
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
@@ -430,9 +411,6 @@ namespace ArtTools
             
             EditorGUILayout.EndVertical();
             
-            // 结束性能监控
-            _debugManager?.EndPerformanceMonitoring("DrawRightPanel");
-            
             return hasChanged;
         }
         
@@ -445,9 +423,6 @@ namespace ArtTools
         public bool DrawBottomBar(TestToolsWindowData activeData, bool isDirty)
         {
             if (activeData == null) return false;
-            
-            // 开始性能监控
-            _debugManager?.StartPerformanceMonitoring("DrawBottomBar");
             
             bool hasChanged = false;
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
@@ -537,9 +512,6 @@ namespace ArtTools
             
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
-            
-            // 结束性能监控
-            _debugManager?.EndPerformanceMonitoring("DrawBottomBar");
             
             return hasChanged;
         }

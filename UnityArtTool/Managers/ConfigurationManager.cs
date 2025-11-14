@@ -176,12 +176,13 @@ namespace ArtTools
         {
             try
             {
-                if (string.IsNullOrEmpty(path) || !File.Exists(path))
+                if (string.IsNullOrEmpty(path))
                 {
-                    Debug.LogWarning($"[测试工具] 配置文件不存在: {path}");
+                    Debug.LogWarning("[测试工具] 配置文件路径为空，无法加载配置");
                     return false;
                 }
-                
+
+                // 直接通过 AssetDatabase 尝试加载配置资产，避免使用物理路径检查导致误判
                 TestToolsWindowData data = AssetDatabase.LoadAssetAtPath<TestToolsWindowData>(path);
                 if (data == null)
                 {
@@ -302,36 +303,76 @@ namespace ArtTools
         /// 创建新的配置文件
         /// </summary>
         /// <param name="fileName">文件名（不包含扩展名）</param>
-        /// <param name="savePath">保存路径（相对于Assets目录）</param>
+        /// <param name="saveFolder">
+        ///  保存目录（相对于项目根目录，例如 "Assets/ArtTools"）。
+        ///  如果为空，将按以下优先级自动推导：
+        ///  1. 当前活动配置所在目录
+        ///  2. 已有任意配置文件所在目录
+        ///  3. "Assets"
+        /// </param>
         /// <returns>创建的配置数据对象</returns>
-        public TestToolsWindowData CreateNewConfiguration(string fileName, string savePath = "Assets/Editor/ArtTools/Editor/ArtTools/TestTool/Data/")
+        public TestToolsWindowData CreateNewConfiguration(string fileName, string saveFolder = null)
         {
             try
             {
-                // 确保目录存在
-                if (!Directory.Exists(savePath))
+                // 1. 推导保存目录（Assets 相对路径）
+                string folderPath = saveFolder;
+
+                if (string.IsNullOrEmpty(folderPath))
                 {
-                    Directory.CreateDirectory(savePath);
+                    // 优先使用当前活动配置所在目录
+                    if (_activeData != null)
+                    {
+                        string activePath = AssetDatabase.GetAssetPath(_activeData);
+                        if (!string.IsNullOrEmpty(activePath))
+                        {
+                            folderPath = Path.GetDirectoryName(activePath);
+                        }
+                    }
+
+                    // 其次使用任意已存在配置的目录
+                    if (string.IsNullOrEmpty(folderPath) && _availableDataPaths.Count > 0)
+                    {
+                        folderPath = Path.GetDirectoryName(_availableDataPaths[0]);
+                    }
+
+                    // 最后兜底到 Assets 根目录
+                    if (string.IsNullOrEmpty(folderPath))
+                    {
+                        folderPath = "Assets";
+                    }
                 }
-                
-                // 创建新的配置数据
+
+                // 规范化为 Unity 资源路径格式
+                folderPath = folderPath.Replace("\\", "/");
+
+                // 2. 确保物理目录存在（需要将 Assets 相对路径转换为磁盘路径）
+                string projectRoot = Directory.GetParent(Application.dataPath).FullName;
+                string fullFolderPath = Path.Combine(projectRoot, folderPath);
+                if (!Directory.Exists(fullFolderPath))
+                {
+                    Directory.CreateDirectory(fullFolderPath);
+                }
+
+                // 3. 创建新的配置数据
                 TestToolsWindowData newData = ScriptableObject.CreateInstance<TestToolsWindowData>();
                 newData.tabs = new List<ToolTab>
                 {
                     new ToolTab { name = "默认标签页" }
                 };
-                
-                // 保存到文件
-                string fullPath = Path.Combine(savePath, fileName + ".asset");
-                AssetDatabase.CreateAsset(newData, fullPath);
+
+                // 4. 生成资源路径并保存到文件
+                string assetPath = Path.Combine(folderPath, fileName + ".asset").Replace("\\", "/");
+                AssetDatabase.CreateAsset(newData, assetPath);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
-                
-                // 刷新配置列表
+
+                // 5. 刷新配置列表并尝试加载新建的配置
                 RefreshAvailableConfigurations();
-                
-                Debug.Log($"[测试工具] 已创建新配置文件: {fullPath}");
-                
+                LoadConfigurationByPath(assetPath);
+
+                Debug.Log($"[测试工具] 已创建新配置文件: {assetPath}");
+
                 return newData;
             }
             catch (Exception ex)
@@ -392,13 +433,10 @@ namespace ArtTools
             string lastConfigPath = EditorPrefs.GetString(PREFS_KEY_LAST_CONFIG, null);
             if (!string.IsNullOrEmpty(lastConfigPath))
             {
-                if (File.Exists(lastConfigPath))
+                // 统一通过 LoadConfigurationByPath 进行加载和合法性验证
+                if (!LoadConfigurationByPath(lastConfigPath))
                 {
-                    LoadConfigurationByPath(lastConfigPath);
-                }
-                else
-                {
-                    Debug.LogWarning($"[测试工具] 上次使用的配置文件已不存在: {lastConfigPath}，已清空记录。");
+                    Debug.LogWarning($"[测试工具] 上次使用的配置文件已无法加载: {lastConfigPath}，已清空记录。");
                     EditorPrefs.DeleteKey(PREFS_KEY_LAST_CONFIG);
                 }
             }
