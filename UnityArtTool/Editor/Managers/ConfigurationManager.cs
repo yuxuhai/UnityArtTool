@@ -105,6 +105,9 @@ namespace ArtTools
             {
                 if (_selectedDataIndex != value)
                 {
+                    // 在更换配置文件时，先刷新配置列表以获取最新的配置文件
+                    RefreshAvailableConfigurations();
+                    
                     _selectedDataIndex = value;
                     LoadConfigurationByIndex(value);
                 }
@@ -182,9 +185,6 @@ namespace ArtTools
                     return false;
                 }
 
-                // 刷新资产数据库以确保加载最新的配置文件内容
-                AssetDatabase.Refresh();
-                
                 // 直接通过 AssetDatabase 尝试加载配置资产，避免使用物理路径检查导致误判
                 TestToolsWindowData data = AssetDatabase.LoadAssetAtPath<TestToolsWindowData>(path);
                 if (data == null)
