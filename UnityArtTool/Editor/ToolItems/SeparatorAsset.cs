@@ -16,7 +16,7 @@ namespace ArtTools
     /// 可以显示为简单的线条或带标题的框，用于在工具列表中进行视觉分组。
     /// </summary>
     [Serializable]
-    public class SeparatorAsset : TestToolItem
+    public class SeparatorAsset : ArtToolItem
     {
         /// <summary>
         /// 分隔符上显示的标题文本
@@ -34,7 +34,7 @@ namespace ArtTools
         /// 创建分隔符工具项的深拷贝
         /// </summary>
         /// <returns>新的 SeparatorAsset 实例</returns>
-        public override TestToolItem Clone()
+        public override ArtToolItem Clone()
         {
             return new SeparatorAsset
             {

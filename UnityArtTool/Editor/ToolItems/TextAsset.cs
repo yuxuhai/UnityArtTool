@@ -16,7 +16,7 @@ namespace ArtTools
     /// 支持锁定模式以防止误编辑，适合在工具界面中添加说明文档。
     /// </summary>
     [Serializable]
-    public class TextAsset : TestToolItem
+    public class TextAsset : ArtToolItem
     {
         /// <summary>
         /// 要显示的文本内容
@@ -35,7 +35,7 @@ namespace ArtTools
         /// 创建文本工具项的深拷贝
         /// </summary>
         /// <returns>新的 TextAsset 实例</returns>
-        public override TestToolItem Clone()
+        public override ArtToolItem Clone()
         {
             return new TextAsset
             {

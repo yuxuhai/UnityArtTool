@@ -1,6 +1,6 @@
 /**
  * 文件名: DragDropManager.cs
- * 作用: 负责测试工具窗口的拖拽排序功能管理
+ * 作用: 负责 ArtTools 工具窗口的拖拽排序功能管理
  * 作者: yuxuhai
  * 日期: 2024
  */
@@ -80,12 +80,12 @@ namespace ArtTools
         /// <summary>
         /// 标签页拖拽的唯一标识符
         /// </summary>
-        private const string TabDragAndDropId = "TestToolTab_Drag";
+        private const string TabDragAndDropId = "ArtToolsTab_Drag";
         
         /// <summary>
         /// 工具项拖拽的唯一标识符
         /// </summary>
-        private const string ItemDragAndDropId = "TestToolItem_Drag";
+        private const string ItemDragAndDropId = "ArtToolItem_Drag";
         
         #endregion
         

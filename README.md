@@ -93,7 +93,7 @@ Unity 美术通用工具合集是一个专为美术、关卡、运营等非程�
 2. 打开 Unity 后，等待脚本编译完成。
 3. 在菜单栏中通过 `工具/美术工具合集` 打开主编辑器窗口。
 
-> 菜单路径来源于 `TestToolsEditorWindow` 中的  
+> 菜单路径来源于 `ArtToolsEditorWindow` 中的  
 > `[MenuItem("工具/美术工具合集", false, 2)]`
 
 ---
@@ -103,14 +103,14 @@ Unity 美术通用工具合集是一个专为美术、关卡、运营等非程�
 ### 第一步：创建配置文件
 
 1. 在 Project 窗口空白处右键：  
-   `Create -> ArtTools -> Test Tool Data`
+   `Create -> ArtTools -> Art Tool Data`
 2. 为配置文件起一个易懂的名字，例如 `ArtTools_Default`
 3. 建议放在团队统一约定的目录，如：`Assets/ArtTools/Configs`
 
 ### 第二步：打开工具窗口并选择配置
 
 1. 在菜单栏点击：`工具 / 美术工具合集`
-2. 在窗口顶部的 **配置文件** 下拉框中，选择刚刚创建的 `Test Tool Data` 资产
+2. 在窗口顶部的 **配置文件** 下拉框中，选择刚刚创建的 `Art Tool Data` 资产
 
 ### 第三步：进入编辑模式
 
@@ -147,7 +147,7 @@ Unity 美术通用工具合集是一个专为美术、关卡、运营等非程�
 ### 第五步：保存并使用
 
 1. 当配置发生改变时，底部“保存配置”按钮会以 `保存配置 *` 的形式高亮提示
-2. 点击 `保存配置` 将当前配置写回 `Test Tool Data` 资产
+2. 点击 `保存配置` 将当前配置写回 `Art Tool Data` 资产
 3. 关闭“编辑模式”，开始像普通工具栏一样使用所有按钮
 
 ---
@@ -253,7 +253,7 @@ A：可能的原因：
 建议在编辑模式下打开对应工具项，检查配置是否正确，必要时重新指定资源或路径。
 
 **Q：团队协作时配置会不会丢？**  
-A：所有配置都保存在 `Test Tool Data` 这个 ScriptableObject 资产里，建议：
+A：所有配置都保存在 `Art Tool Data` 这个 ScriptableObject 资产里，建议：
 - 将配置资产和脚本一起纳入版本管理（Git / SVN）  
 - 在团队内约定统一的保存位置（例如 `Assets/ArtTools/Configs`）
 

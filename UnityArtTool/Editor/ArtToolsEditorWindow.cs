@@ -6,10 +6,10 @@ using UnityEngine;
 namespace ArtTools
 {
     /// <summary>
-    /// 测试工具编辑器窗口主类，负责窗口生命周期管理和各管理器的协调。
+    /// ArtTools 编辑器窗口主类，负责窗口生命周期管理和各管理器的协调。
     /// 采用事件驱动架构，通过各个专门的管理器类来处理具体功能。
     /// </summary>
-    public class TestToolsEditorWindow : EditorWindow, IHasCustomMenu
+    public class ArtToolsEditorWindow : EditorWindow, IHasCustomMenu
     {
         #region 管理器实例
 
@@ -33,12 +33,12 @@ namespace ArtTools
         #region 窗口生命周期
 
         /// <summary>
-        /// 打开测试工具窗口的菜单项
+        /// 打开 ArtTools 工具窗口的菜单项
         /// </summary>
         [MenuItem("工具/美术工具合集", false, 2)]
         public static void Open()
         {
-            TestToolsEditorWindow window = GetWindow<TestToolsEditorWindow>();
+            ArtToolsEditorWindow window = GetWindow<ArtToolsEditorWindow>();
             window.titleContent = new GUIContent("美术工具合集");
             window.Show();
         }
@@ -111,9 +111,11 @@ namespace ArtTools
             {
                 DrawMainUI();
             }
-            catch (Exception ex)
+            // 只拦截“真正的”异常，像 ExitGUIException 这样的控制流异常直接让 Unity 自己处理，
+            // 否则会在使用 ObjectField / ObjectPicker 等控件时频繁刷 ExitGUIException 日志。
+            catch (Exception ex) when (!(ex is ExitGUIException))
             {
-                Debug.LogError($"[测试工具] 绘制UI时发生异常: {ex.Message}");
+                Debug.LogError($"[ArtTools] 绘制 UI 时发生异常: {ex.Message}");
                 Debug.LogException(ex);
                 EditorGUILayout.HelpBox($"UI绘制错误: {ex.Message}", MessageType.Error);
             }
@@ -160,11 +162,11 @@ namespace ArtTools
                 _dragDropManager.OnTabReordered += OnTabReordered;
                 _dragDropManager.OnToolItemReordered += OnToolItemReordered;
                 
-                Debug.Log("[测试工具] 所有管理器初始化完成");
+                Debug.Log("[ArtTools] 所有管理器初始化完成");
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[测试工具] 管理器初始化失败: {ex.Message}");
+                Debug.LogError($"[ArtTools] 管理器初始化失败: {ex.Message}");
                 throw;
             }
         }
@@ -202,7 +204,7 @@ namespace ArtTools
             // 如果没有活动配置，显示提示信息
             if (_configManager.ActiveData == null)
             {
-                EditorGUILayout.HelpBox("请在上方选择一个测试工具配置文件，或者在项目中创建一个。\n(右键 -> Create -> ArtTools -> Test Tool Data)", MessageType.Info);
+                EditorGUILayout.HelpBox("请在上方选择一个 ArtTools 配置文件，或者在项目中创建一个。\n(右键 -> Create -> ArtTools -> Art Tool Data)", MessageType.Info);
                 return;
             }
             
@@ -242,7 +244,7 @@ namespace ArtTools
         /// 处理配置文件加载完成事件
         /// </summary>
         /// <param name="data">加载的配置数据</param>
-        private void OnConfigurationLoaded(TestToolsWindowData data)
+        private void OnConfigurationLoaded(ArtToolsWindowData data)
         {
             Repaint(); // 刷新UI显示
         }
@@ -251,7 +253,7 @@ namespace ArtTools
         /// 处理配置文件保存完成事件
         /// </summary>
         /// <param name="data">保存的配置数据</param>
-        private void OnConfigurationSaved(TestToolsWindowData data)
+        private void OnConfigurationSaved(ArtToolsWindowData data)
         {
             _uiManager?.ShowNotification("配置已保存!", this);
         }
@@ -296,7 +298,7 @@ namespace ArtTools
                 // 检查场景文件是否存在
                 if (string.IsNullOrEmpty(scenePath) || !System.IO.File.Exists(scenePath))
                 {
-                    Debug.LogError("[测试工具] 联机启动失败: 场景引用丢失，请重新设置联机启动场景");
+                    Debug.LogError("[ArtTools] 联机启动失败: 场景引用丢失，请重新设置联机启动场景");
                     ShowNotification(new GUIContent("联机启动失败: 场景引用丢失"));
                     return;
                 }
@@ -310,7 +312,7 @@ namespace ArtTools
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError($"[测试工具] 联机启动失败, 无法打开场景 '{scenePath}'");
+                        Debug.LogError($"[ArtTools] 联机启动失败, 无法打开场景 '{scenePath}'");
                         Debug.LogException(e);
                         ShowNotification(new GUIContent("联机启动失败, 请查看控制台"));
                     }
@@ -318,7 +320,7 @@ namespace ArtTools
             }
             else
             {
-                Debug.LogError("[测试工具] 联机启动失败: 未设置联机启动场景");
+                Debug.LogError("[ArtTools] 联机启动失败: 未设置联机启动场景");
                 ShowNotification(new GUIContent("联机启动失败: 未设置联机启动场景"));
             }
         }
@@ -341,7 +343,7 @@ namespace ArtTools
             var activeData = _configManager?.ActiveData;
             if (activeData != null)
             {
-                activeData.tabs.Add(new ToolTab { name = tabName });
+                activeData.tabs.Add(new ArtToolsTab { name = tabName });
                 _configManager.MarkDirty();
             }
         }
@@ -371,7 +373,7 @@ namespace ArtTools
             if (activeData != null && fromIndex >= 0 && fromIndex < activeData.tabs.Count &&
                 toIndex >= 0 && toIndex < activeData.tabs.Count)
             {
-                ToolTab draggedTab = activeData.tabs[fromIndex];
+                ArtToolsTab draggedTab = activeData.tabs[fromIndex];
                 activeData.tabs.RemoveAt(fromIndex);
                 activeData.tabs.Insert(toIndex, draggedTab);
                 
@@ -390,7 +392,7 @@ namespace ArtTools
         /// </summary>
         /// <param name="tabIndex">标签页索引</param>
         /// <param name="toolItem">新工具项</param>
-        private void OnToolItemAdded(int tabIndex, TestToolItem toolItem)
+        private void OnToolItemAdded(int tabIndex, ArtToolItem toolItem)
         {
             var activeData = _configManager?.ActiveData;
             if (activeData != null && tabIndex >= 0 && tabIndex < activeData.tabs.Count)
@@ -414,7 +416,7 @@ namespace ArtTools
                 var toolItems = activeData.tabs[tabIndex].toolItems;
                 if (fromIndex >= 0 && fromIndex < toolItems.Count && toIndex >= 0 && toIndex <= toolItems.Count)
                 {
-                    TestToolItem draggedItem = toolItems[fromIndex];
+                    ArtToolItem draggedItem = toolItems[fromIndex];
                     toolItems.RemoveAt(fromIndex);
                     int finalDropIndex = (fromIndex < toIndex) ? toIndex - 1 : toIndex;
                     toolItems.Insert(finalDropIndex, draggedItem);
@@ -439,7 +441,7 @@ namespace ArtTools
         private void OnRefreshConfigRequested()
         {
             _configManager?.RefreshAvailableConfigurations();
-            Debug.Log("[测试工具] 已刷新配置文件列表");
+            Debug.Log("[ArtTools] 已刷新配置文件列表");
         }
          
          #endregion
@@ -462,4 +464,5 @@ namespace ArtTools
          #endregion
      }
  }
-                        
+
+

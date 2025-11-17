@@ -9,7 +9,7 @@ namespace ArtTools
 {
     /// <summary>
     /// 提供一个接口，用于检查对象内部的资产引用是否有效。
-    /// 实现此接口的类（特别是TestToolItem的子类）可以被系统自动调用，
+    /// 实现此接口的类（特别是 ArtToolItem 的子类）可以被系统自动调用，
     /// 以报告或处理丢失的引用（例如，在Unity中资源被删除或移动后）。
     /// </summary>
     public interface IReferenceValidator

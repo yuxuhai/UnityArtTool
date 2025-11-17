@@ -67,7 +67,7 @@ namespace ArtTools
 
     #endregion
 
-    #region 核心数据结构 (原代码缺失的定义)
+    #region 核心数据结构
 
     /// <summary>
     /// 存储编辑器工具的路径和显示名称。
@@ -92,13 +92,13 @@ namespace ArtTools
     #endregion
 
     /// <summary>
-    /// ScriptableObject配置文件，用于存储整个测试工具窗口的数据。
+    /// ScriptableObject 配置文件，用于存储整个 ArtTools 工具窗口的数据。
     /// </summary>
-    [CreateAssetMenu(fileName = "Test Tools Window Data", menuName = "ArtTools/Test Tool Data")]
-    public class TestToolsWindowData : ScriptableObject
+    [CreateAssetMenu(fileName = "Art Tools Window Data", menuName = "ArtTools/Art Tool Data")]
+    public class ArtToolsWindowData : ScriptableObject
     {
         [Tooltip("工具窗口的标签页列表")]
-        public List<ToolTab> tabs = new List<ToolTab>();
+        public List<ArtToolsTab> tabs = new List<ArtToolsTab>();
 
         [Tooltip("执行截图启动时，记录的日志数量上限")]
         public int logLimit = 30;
@@ -116,7 +116,7 @@ namespace ArtTools
     /// 重构后的版本，拖拽逻辑由外部DragDropManager处理。
     /// </summary>
     [Serializable]
-    public class ToolTab
+    public class ArtToolsTab
     {
         /// <summary>
         /// 标签页上显示的名称
@@ -129,7 +129,7 @@ namespace ArtTools
         /// </summary>
         [Tooltip("此标签页下的所有具体工具项")]
         [SerializeReference] // 使用SerializeReference支持多态序列化，非常关键！
-        public List<TestToolItem> toolItems = new List<TestToolItem>();
+        public List<ArtToolItem> toolItems = new List<ArtToolItem>();
 
         /// <summary>
         /// 绘制该标签页下的所有工具项UI
@@ -209,7 +209,7 @@ namespace ArtTools
         /// 添加新的工具项到当前标签页
         /// </summary>
         /// <param name="toolItem">要添加的工具项</param>
-        public void AddToolItem(TestToolItem toolItem)
+        public void AddToolItem(ArtToolItem toolItem)
         {
             if (toolItem != null)
             {
@@ -244,7 +244,7 @@ namespace ArtTools
                 toIndex >= 0 && toIndex <= toolItems.Count && 
                 fromIndex != toIndex)
             {
-                TestToolItem item = toolItems[fromIndex];
+                ArtToolItem item = toolItems[fromIndex];
                 toolItems.RemoveAt(fromIndex);
                 
                 // 调整插入位置
@@ -275,11 +275,5 @@ namespace ArtTools
             toolItems?.Clear();
         }
     }
-
-    // 注意：具体的工具项类已移动到 ToolItems 子目录中的独立文件
-    // TestToolItem 基类现在位于 ToolItems/TestToolItem.cs
-
-
-
 }
 

@@ -16,7 +16,7 @@ namespace ArtTools
     /// 通过指定菜单路径来调用Unity编辑器中的各种功能。
     /// </summary>
     [Serializable]
-    public class ToolAsset : TestToolItem
+    public class ToolAsset : ArtToolItem
     {
         /// <summary>
         /// 在工具项上方显示的标签文本，可为空
@@ -34,7 +34,7 @@ namespace ArtTools
         /// 创建工具项的深拷贝
         /// </summary>
         /// <returns>新的 ToolAsset 实例</returns>
-        public override TestToolItem Clone()
+        public override ArtToolItem Clone()
         {
             return new ToolAsset
             {
@@ -66,7 +66,7 @@ namespace ArtTools
                 {
                     if (!EditorApplication.ExecuteMenuItem(toolPath.path))
                     {
-                        Debug.LogError($"[测试工具] 未找到对应的菜单项，请检查路径是否正确: {toolPath.path}");
+                        Debug.LogError($"[ArtTools] 未找到对应的菜单项，请检查路径是否正确: {toolPath.path}");
                     }
                 }
             }

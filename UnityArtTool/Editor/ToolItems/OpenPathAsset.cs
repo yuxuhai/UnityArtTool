@@ -16,7 +16,7 @@ namespace ArtTools
     /// 支持打开文件夹或选中特定文件，便于快速访问项目相关的外部资源。
     /// </summary>
     [Serializable]
-    public class OpenPathAsset : TestToolItem
+    public class OpenPathAsset : ArtToolItem
     {
         /// <summary>
         /// 要打开的文件夹或文件的完整路径
@@ -28,7 +28,7 @@ namespace ArtTools
         /// 创建路径打开工具项的深拷贝
         /// </summary>
         /// <returns>新的 OpenPathAsset 实例</returns>
-        public override TestToolItem Clone()
+        public override ArtToolItem Clone()
         {
             return new OpenPathAsset { fullPath = this.fullPath };
         }
@@ -53,7 +53,7 @@ namespace ArtTools
                 }
                 else
                 {
-                     Debug.LogError($"[测试工具] 路径无效或不存在: {fullPath}");
+                     Debug.LogError($"[ArtTools] 路径无效或不存在: {fullPath}");
                 }
             }
         }

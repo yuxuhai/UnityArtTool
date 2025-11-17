@@ -17,7 +17,7 @@ namespace ArtTools
     /// 用于快速定位和选择项目中的特定资源文件。
     /// </summary>
     [Serializable]
-    public class FindObjectAsset : TestToolItem, IReferenceValidator
+    public class FindObjectAsset : ArtToolItem, IReferenceValidator
     {
         /// <summary>
         /// 在工具项上方显示的标签文本，可为空
@@ -46,7 +46,7 @@ namespace ArtTools
         /// 创建资产定位工具项的深拷贝
         /// </summary>
         /// <returns>新的 FindObjectAsset 实例</returns>
-        public override TestToolItem Clone()
+        public override ArtToolItem Clone()
         {
             return new FindObjectAsset
             {

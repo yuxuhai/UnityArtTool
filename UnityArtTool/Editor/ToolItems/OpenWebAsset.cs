@@ -16,7 +16,7 @@ namespace ArtTools
     /// 支持在默认浏览器中打开网页链接，可配置显示名称和URL地址。
     /// </summary>
     [Serializable]
-    public class OpenWebAsset : TestToolItem
+    public class OpenWebAsset : ArtToolItem
     {
         /// <summary>
         /// 在工具项上方显示的标签文本，可为空
@@ -46,7 +46,7 @@ namespace ArtTools
         /// 创建打开网页工具项的深拷贝
         /// </summary>
         /// <returns>新的 OpenWebAsset 实例</returns>
-        public override TestToolItem Clone()
+        public override ArtToolItem Clone()
         {
             return new OpenWebAsset
             {
@@ -95,14 +95,14 @@ namespace ArtTools
         {
             if (string.IsNullOrEmpty(webUrl))
             {
-                Debug.LogWarning("[测试工具] 网页URL为空，无法打开");
+                Debug.LogWarning("[ArtTools] 网页URL为空，无法打开");
                 return;
             }
             
             // 验证URL格式
             if (!IsValidUrl(webUrl))
             {
-                Debug.LogWarning($"[测试工具] 无效的URL格式: {webUrl}");
+                Debug.LogWarning($"[ArtTools] 无效的URL格式: {webUrl}");
                 return;
             }
             
@@ -125,11 +125,11 @@ namespace ArtTools
                     Application.OpenURL(webUrl);
                 }
                 
-                Debug.Log($"[测试工具] 已打开网页: {webUrl}");
+                Debug.Log($"[ArtTools] 已打开网页: {webUrl}");
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"[测试工具] 打开网页失败: {ex.Message}");
+                Debug.LogError($"[ArtTools] 打开网页失败: {ex.Message}");
             }
         }
         

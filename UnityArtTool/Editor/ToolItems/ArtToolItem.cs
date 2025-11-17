@@ -1,6 +1,6 @@
 /**
- * 文件名: TestToolItem.cs
- * 作用: 定义测试工具项的抽象基类
+ * 文件名: ArtToolItem.cs
+ * 作用: 定义 ArtTools 工具项的抽象基类
  * 作者: yuxuhai
  * 日期: 2024
  */
@@ -15,7 +15,7 @@ namespace ArtTools
     /// 提供了工具项的基本接口，包括UI绘制和克隆功能。
     /// </summary>
     [Serializable]
-    public abstract class TestToolItem
+    public abstract class ArtToolItem
     {
         /// <summary>
         /// 绘制工具项的主要UI界面
@@ -26,6 +26,8 @@ namespace ArtTools
         /// 创建当前工具项的深拷贝副本
         /// </summary>
         /// <returns>工具项的克隆实例</returns>
-        public abstract TestToolItem Clone();
+        public abstract ArtToolItem Clone();
     }
 }
+
+

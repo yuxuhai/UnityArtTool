@@ -1,6 +1,6 @@
 /**
  * 文件名: UIManager.cs
- * 作用: 负责测试工具窗口的UI绘制和布局管理
+ * 作用: 负责 ArtTools 工具窗口的 UI 绘制和布局管理
  * 作者: yuxuhai
  * 日期: 2024
  */
@@ -17,8 +17,8 @@ using Object = UnityEngine.Object;
 namespace ArtTools
 {
     /// <summary>
-    /// UI管理器类，负责处理测试工具窗口的所有UI绘制和布局操作。
-    /// 包括配置选择器、侧边栏、主面板、底部栏等UI组件的绘制。
+    /// UI管理器类，负责处理 ArtTools 工具窗口的所有 UI 绘制和布局操作。
+    /// 包括配置选择器、侧边栏、主面板、底部栏等 UI 组件的绘制。
     /// </summary>
     public class UIManager
     {
@@ -72,7 +72,7 @@ namespace ArtTools
         /// <summary>
         /// 工具项添加时触发的事件
         /// </summary>
-        public event Action<int, TestToolItem> OnToolItemAdded;
+        public event Action<int, ArtToolItem> OnToolItemAdded;
         
         #endregion
         
@@ -303,7 +303,7 @@ namespace ArtTools
         /// <param name="activeData">当前活动的配置数据</param>
         /// <param name="dragDropManager">拖拽管理器</param>
         /// <returns>是否有数据变化</returns>
-        public bool DrawLeftSidebar(TestToolsWindowData activeData, DragDropManager dragDropManager)
+        public bool DrawLeftSidebar(ArtToolsWindowData activeData, DragDropManager dragDropManager)
         {
             if (activeData == null) return false;
             
@@ -402,7 +402,7 @@ namespace ArtTools
         /// <param name="activeData">当前活动的配置数据</param>
         /// <param name="dragDropManager">拖拽管理器</param>
         /// <returns>是否有数据变化</returns>
-        public bool DrawRightPanel(TestToolsWindowData activeData, DragDropManager dragDropManager)
+        public bool DrawRightPanel(ArtToolsWindowData activeData, DragDropManager dragDropManager)
         {
             if (activeData == null) return false;
             
@@ -419,7 +419,7 @@ namespace ArtTools
             _scrollPositionRight = EditorGUILayout.BeginScrollView(_scrollPositionRight);
             if (activeData.tabs.Count > 0 && _selectedTabID >= 0 && _selectedTabID < activeData.tabs.Count)
             {
-                // 传递拖拽管理器和标签页索引给ToolTab的DrawMainUI方法
+                // 传递拖拽管理器和标签页索引给 ArtToolsTab 的 DrawMainUI 方法
                 if (activeData.tabs[_selectedTabID].DrawMainUI(_isEditMode, dragDropManager, _selectedTabID))
                 {
                     hasChanged = true;
@@ -438,7 +438,7 @@ namespace ArtTools
         /// <param name="activeData">当前活动的配置数据</param>
         /// <param name="isDirty">配置是否有未保存的修改</param>
         /// <returns>是否有数据变化</returns>
-        public bool DrawBottomBar(TestToolsWindowData activeData, bool isDirty)
+        public bool DrawBottomBar(ArtToolsWindowData activeData, bool isDirty)
         {
             if (activeData == null) return false;
             
@@ -564,7 +564,7 @@ namespace ArtTools
         /// </summary>
         /// <param name="activeData">当前活动的配置数据</param>
         /// <returns>是否有数据变化</returns>
-        private bool DrawAddNewItemPanel(TestToolsWindowData activeData)
+        private bool DrawAddNewItemPanel(ArtToolsWindowData activeData)
         {
             bool hasChanged = false;
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
@@ -581,7 +581,7 @@ namespace ArtTools
             {
                 if (hasValidTab)
                 {
-                    TestToolItem newItem = GetClonedNewItem();
+                    ArtToolItem newItem = GetClonedNewItem();
                     OnToolItemAdded?.Invoke(_selectedTabID, newItem);
                     hasChanged = true;
                 }
@@ -752,7 +752,7 @@ namespace ArtTools
         /// 获取当前配置的新工具项的克隆实例
         /// </summary>
         /// <returns>克隆的工具项实例</returns>
-        private TestToolItem GetClonedNewItem()
+        private ArtToolItem GetClonedNewItem()
         {
             switch (_toolTypeToAdd)
             {
@@ -775,13 +775,13 @@ namespace ArtTools
         {
             if (string.IsNullOrWhiteSpace(_searchKeyword))
             {
-                Debug.LogWarning("[测试工具] 搜索关键词为空");
+                Debug.LogWarning("[ArtTools] 搜索关键词为空");
                 return;
             }
             
             if (_selectedSearchEngine < 0 || _selectedSearchEngine >= _searchUrls.Length)
             {
-                Debug.LogError("[测试工具] 无效的搜索引擎索引");
+                Debug.LogError("[ArtTools] 无效的搜索引擎索引");
                 return;
             }
             
@@ -796,11 +796,11 @@ namespace ArtTools
                 // 打开搜索页面
                 Application.OpenURL(searchUrl);
                 
-                Debug.Log($"[测试工具] 已在{_searchEngines[_selectedSearchEngine]}中搜索: {_searchKeyword}");
+                Debug.Log($"[ArtTools] 已在{_searchEngines[_selectedSearchEngine]}中搜索: {_searchKeyword}");
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"[测试工具] 执行搜索时发生错误: {ex.Message}");
+                Debug.LogError($"[ArtTools] 执行搜索时发生错误: {ex.Message}");
             }
         }
         

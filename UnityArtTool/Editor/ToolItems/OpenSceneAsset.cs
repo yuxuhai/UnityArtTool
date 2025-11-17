@@ -17,7 +17,7 @@ namespace ArtTools
     /// 提供快速切换场景的功能，支持保存当前场景的修改。
     /// </summary>
     [Serializable]
-    public class OpenSceneAsset : TestToolItem, IReferenceValidator
+    public class OpenSceneAsset : ArtToolItem, IReferenceValidator
     {
         /// <summary>
         /// 在工具项上方显示的标签文本，可为空
@@ -64,7 +64,7 @@ namespace ArtTools
         /// 创建场景打开工具项的深拷贝
         /// </summary>
         /// <returns>新的 OpenSceneAsset 实例</returns>
-        public override TestToolItem Clone()
+        public override ArtToolItem Clone()
         {
             return new OpenSceneAsset
             {

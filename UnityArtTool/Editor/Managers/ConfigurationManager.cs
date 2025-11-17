@@ -1,6 +1,6 @@
 /**
  * 文件名: ConfigurationManager.cs
- * 作用: 负责测试工具配置文件的加载、保存和管理
+ * 作用: 负责 ArtTools 配置文件的加载、保存和管理
  * 作者: yuxuhai
  * 日期: 2024
  */
@@ -15,7 +15,7 @@ using UnityEngine;
 namespace ArtTools
 {
     /// <summary>
-    /// 配置管理器类，负责处理测试工具配置文件的所有操作。
+    /// 配置管理器类，负责处理 ArtTools 配置文件的所有操作。
     /// 包括配置文件的发现、加载、保存、验证等功能。
     /// </summary>
     public class ConfigurationManager
@@ -25,12 +25,12 @@ namespace ArtTools
         /// <summary>
         /// 配置文件加载完成时触发的事件
         /// </summary>
-        public event Action<TestToolsWindowData> OnConfigurationLoaded;
+        public event Action<ArtToolsWindowData> OnConfigurationLoaded;
         
         /// <summary>
         /// 配置文件保存完成时触发的事件
         /// </summary>
-        public event Action<TestToolsWindowData> OnConfigurationSaved;
+        public event Action<ArtToolsWindowData> OnConfigurationSaved;
         
         /// <summary>
         /// 配置文件列表更新时触发的事件
@@ -49,7 +49,7 @@ namespace ArtTools
         /// <summary>
         /// 当前正在使用的配置数据
         /// </summary>
-        private TestToolsWindowData _activeData;
+        private ArtToolsWindowData _activeData;
         
         /// <summary>
         /// 项目中所有可用的配置文件路径列表
@@ -74,7 +74,7 @@ namespace ArtTools
         /// <summary>
         /// EditorPrefs中存储上次使用配置的键名
         /// </summary>
-        private const string PREFS_KEY_LAST_CONFIG = "TestToolsWindowDataName";
+        private const string PREFS_KEY_LAST_CONFIG = "ArtToolsWindowDataName";
         
         #endregion
         
@@ -83,7 +83,7 @@ namespace ArtTools
         /// <summary>
         /// 获取当前活动的配置数据
         /// </summary>
-        public TestToolsWindowData ActiveData => _activeData;
+        public ArtToolsWindowData ActiveData => _activeData;
         
         /// <summary>
         /// 获取所有可用配置文件的路径列表
@@ -135,7 +135,7 @@ namespace ArtTools
         public void RefreshAvailableConfigurations()
         {
             _availableDataPaths.Clear();
-            string[] guids = AssetDatabase.FindAssets($"t:{nameof(TestToolsWindowData)}");
+            string[] guids = AssetDatabase.FindAssets($"t:{nameof(ArtToolsWindowData)}");
             
             foreach (string guid in guids)
             {
@@ -178,15 +178,15 @@ namespace ArtTools
             {
                 if (string.IsNullOrEmpty(path))
                 {
-                    Debug.LogWarning("[测试工具] 配置文件路径为空，无法加载配置");
+                    Debug.LogWarning("[ArtTools] 配置文件路径为空，无法加载配置");
                     return false;
                 }
 
                 // 直接通过 AssetDatabase 尝试加载配置资产，避免使用物理路径检查导致误判
-                TestToolsWindowData data = AssetDatabase.LoadAssetAtPath<TestToolsWindowData>(path);
+                ArtToolsWindowData data = AssetDatabase.LoadAssetAtPath<ArtToolsWindowData>(path);
                 if (data == null)
                 {
-                    Debug.LogError($"[测试工具] 无法加载配置文件: {path}");
+                    Debug.LogError($"[ArtTools] 无法加载配置文件: {path}");
                     return false;
                 }
                 
@@ -200,7 +200,7 @@ namespace ArtTools
                 // 保存到EditorPrefs
                 EditorPrefs.SetString(PREFS_KEY_LAST_CONFIG, path);
                 
-                Debug.Log($"[测试工具] 已加载配置文件: {Path.GetFileName(path)}");
+                Debug.Log($"[ArtTools] 已加载配置文件: {Path.GetFileName(path)}");
                 
                 // 触发配置加载事件
                 OnConfigurationLoaded?.Invoke(_activeData);
@@ -209,7 +209,7 @@ namespace ArtTools
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[测试工具] 加载配置文件时发生异常: {ex.Message}");
+                Debug.LogError($"[ArtTools] 加载配置文件时发生异常: {ex.Message}");
                 return false;
             }
         }
@@ -222,7 +222,7 @@ namespace ArtTools
         {
             if (_activeData == null)
             {
-                Debug.LogWarning("[测试工具] 没有活动的配置数据可以保存");
+                Debug.LogWarning("[ArtTools] 没有活动的配置数据可以保存");
                 return false;
             }
             
@@ -234,7 +234,7 @@ namespace ArtTools
                 
                 _isDirty = false;
                 
-                Debug.Log($"[测试工具] 配置已保存: {_activeData.name}");
+                Debug.Log($"[ArtTools] 配置已保存: {_activeData.name}");
                 
                 // 触发配置保存事件
                 OnConfigurationSaved?.Invoke(_activeData);
@@ -243,7 +243,7 @@ namespace ArtTools
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[测试工具] 保存配置时发生异常: {ex.Message}");
+                Debug.LogError($"[ArtTools] 保存配置时发生异常: {ex.Message}");
                 return false;
             }
         }
@@ -267,7 +267,7 @@ namespace ArtTools
         /// </summary>
         /// <param name="data">要验证的配置数据</param>
         /// <returns>验证结果和错误信息</returns>
-        public (bool isValid, string errorMessage) ValidateConfiguration(TestToolsWindowData data)
+        public (bool isValid, string errorMessage) ValidateConfiguration(ArtToolsWindowData data)
         {
             if (data == null)
                 return (false, "配置数据为空");
@@ -311,7 +311,7 @@ namespace ArtTools
         ///  3. "Assets"
         /// </param>
         /// <returns>创建的配置数据对象</returns>
-        public TestToolsWindowData CreateNewConfiguration(string fileName, string saveFolder = null)
+        public ArtToolsWindowData CreateNewConfiguration(string fileName, string saveFolder = null)
         {
             try
             {
@@ -355,10 +355,10 @@ namespace ArtTools
                 }
 
                 // 3. 创建新的配置数据
-                TestToolsWindowData newData = ScriptableObject.CreateInstance<TestToolsWindowData>();
-                newData.tabs = new List<ToolTab>
+                ArtToolsWindowData newData = ScriptableObject.CreateInstance<ArtToolsWindowData>();
+                newData.tabs = new List<ArtToolsTab>
                 {
-                    new ToolTab { name = "默认标签页" }
+                    new ArtToolsTab { name = "默认标签页" }
                 };
 
                 // 4. 生成资源路径并保存到文件
@@ -371,13 +371,13 @@ namespace ArtTools
                 RefreshAvailableConfigurations();
                 LoadConfigurationByPath(assetPath);
 
-                Debug.Log($"[测试工具] 已创建新配置文件: {assetPath}");
+                Debug.Log($"[ArtTools] 已创建新配置文件: {assetPath}");
 
                 return newData;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[测试工具] 创建配置文件时发生异常: {ex.Message}");
+                Debug.LogError($"[ArtTools] 创建配置文件时发生异常: {ex.Message}");
                 return null;
             }
         }
@@ -391,11 +391,11 @@ namespace ArtTools
         /// 如果发现无效引用，会在控制台打印警告信息。
         /// </summary>
         /// <param name="data">要验证的配置数据</param>
-        private void ValidateItemReferences(TestToolsWindowData data)
+        private void ValidateItemReferences(ArtToolsWindowData data)
         {
             if (data == null || data.tabs == null) return;
 
-            Debug.Log("[测试工具] 开始验证所有工具项的引用...");
+            Debug.Log("[ArtTools] 开始验证所有工具项的引用...");
 
             int invalidReferencesCount = 0;
             foreach (var tab in data.tabs)
@@ -409,7 +409,7 @@ namespace ArtTools
                         if (!validator.ValidateReferences())
                         {
                             invalidReferencesCount++;
-                            Debug.LogWarning($"[测试工具] 引用校验失败: {validator.GetValidationMessage()} (标签页: '{tab.name}')");
+                            Debug.LogWarning($"[ArtTools] 引用校验失败: {validator.GetValidationMessage()} (标签页: '{tab.name}')");
                         }
                     }
                 }
@@ -417,11 +417,11 @@ namespace ArtTools
 
             if (invalidReferencesCount == 0)
             {
-                Debug.Log("[测试工具] 所有引用均有效。");
+                Debug.Log("[ArtTools] 所有引用均有效。");
             }
             else
             {
-                Debug.LogWarning($"[测试工具] 引用验证完成，共发现 {invalidReferencesCount} 个无效引用。");
+                Debug.LogWarning($"[ArtTools] 引用验证完成，共发现 {invalidReferencesCount} 个无效引用。");
             }
         }
 
@@ -436,7 +436,7 @@ namespace ArtTools
                 // 统一通过 LoadConfigurationByPath 进行加载和合法性验证
                 if (!LoadConfigurationByPath(lastConfigPath))
                 {
-                    Debug.LogWarning($"[测试工具] 上次使用的配置文件已无法加载: {lastConfigPath}，已清空记录。");
+                    Debug.LogWarning($"[ArtTools] 上次使用的配置文件已无法加载: {lastConfigPath}，已清空记录。");
                     EditorPrefs.DeleteKey(PREFS_KEY_LAST_CONFIG);
                 }
             }

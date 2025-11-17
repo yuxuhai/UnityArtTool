@@ -17,7 +17,7 @@ namespace ArtTools
     /// 支持在指定场景中查找对象，如果场景未打开会自动切换。
     /// </summary>
     [Serializable]
-    public class FindGameObjectAsset : TestToolItem, IReferenceValidator
+    public class FindGameObjectAsset : ArtToolItem, IReferenceValidator
     {
         /// <summary>
         /// 在工具项上方显示的标签文本，可为空
@@ -70,7 +70,7 @@ namespace ArtTools
         /// 创建在场景中查找游戏对象工具项的深拷贝
         /// </summary>
         /// <returns>新的 FindGameObjectAsset 实例</returns>
-        public override TestToolItem Clone()
+        public override ArtToolItem Clone()
         {
             return new FindGameObjectAsset
             {
@@ -134,11 +134,11 @@ namespace ArtTools
                                 try
                                 {
                                     EditorSceneManager.OpenScene(scenePath);
-                                    Debug.Log($"[测试工具] 已切换到场景: {targetSceneName}");
+                                    Debug.Log($"[ArtTools] 已切换到场景: {targetSceneName}");
                                 }
                                 catch (System.Exception ex)
                                 {
-                                    Debug.LogError($"[测试工具] 切换场景失败: {ex.Message}");
+                                    Debug.LogError($"[ArtTools] 切换场景失败: {ex.Message}");
                                     return;
                                 }
                             }
@@ -161,7 +161,7 @@ namespace ArtTools
                     {
                         Selection.activeGameObject = foundObject;
                         EditorGUIUtility.PingObject(foundObject);
-                        Debug.Log($"[测试工具] 已定位到物件: {targetObjectName}");
+                        Debug.Log($"[ArtTools] 已定位到物件: {targetObjectName}");
                     }
                     else
                     {
@@ -175,7 +175,7 @@ namespace ArtTools
                                 return;
                             }
                         }
-                        Debug.LogError($"[测试工具] 在场景中未找到名为 '{targetObjectName}' 的对象。");
+                        Debug.LogError($"[ArtTools] 在场景中未找到名为 '{targetObjectName}' 的对象。");
                     }
                 }
             }
